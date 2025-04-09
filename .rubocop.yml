@@ -1,0 +1,27 @@
+require:
+  - rubocop-md
+  - rubocop-rake
+  - rubocop-rspec
+  - rubocop-yard
+
+AllCops:
+  NewCops: enable
+  SuggestExtensions: true
+  Exclude:
+    - 'out/**/*'
+    - 'vendor/**/*'
+    - 'doc/**/*'
+
+# Don't let long declarations and invocations to contribute to method length.
+# This is preferable over squeezing them onto a single line.
+Metrics/MethodLength:
+  CountAsOne:
+    - array
+    - method_call
+    - hash
+
+# Count multi-line hashes and arrays in examples as one line.
+RSpec/ExampleLength:
+  CountAsOne:
+    - array
+    - hash

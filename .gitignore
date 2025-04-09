@@ -1,0 +1,17 @@
+# Ignore local environment files
+.env
+*.env
+!sample.env
+coverage/
+out/
+
+# Ignore Byebug command history file.
+.byebug_history
+
+## Environment normalization:
+/.bundle/
+/vendor/bundle
+/lib/bundler/man/
+
+# Used by RuboCop. Remote config files pulled in from inherit_from directive.
+.rubocop-https?--*
