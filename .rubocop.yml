@@ -32,4 +32,9 @@ Naming/FileName:
 RSpec/ExampleLength:
   CountAsOne:
     - array
+    - method_call
     - hash
+
+# Favor more reusable helpers.
+RSpec/MultipleMemoizedHelpers:
+  Max: 10

@@ -2,8 +2,9 @@
 
 require 'bundler'
 require 'rubocop/rake_task'
+require 'rspec/core/rake_task'
 
-task default: %i[rubocop]
+task default: %i[rubocop spec]
 
 Bundler::GemHelper.install_tasks
 
@@ -12,3 +13,5 @@ RuboCop::RakeTask.new(:rubocop) do |task|
   task.formatters = %w[pacman]
   task.formatters << 'github' if ENV.fetch('GITHUB_ACTIONS', false)
 end
+
+RSpec::Core::RakeTask.new(:spec)
