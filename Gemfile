@@ -5,16 +5,16 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  gem 'rake', '~> 13.0'
-  gem 'rubocop', '~> 1.48'
-  gem 'rubocop-md', '~> 1.2'
-  gem 'rubocop-rake', '~> 0.6'
-  gem 'rubocop-rspec', '~> 2.22'
-  gem 'rubocop-yard', '~> 0.9.3'
+  gem 'rake', '~> 13.2'
+  gem 'rubocop', '~> 1.75'
+  gem 'rubocop-md', '~> 2.0'
+  gem 'rubocop-rake', '~> 0.7'
+  gem 'rubocop-rspec', '~> 3.5'
+  gem 'rubocop-yard', '~> 0.10'
 end
 
 group :test do
-  gem 'rspec', '~> 3.12'
-  gem 'rspec-github', '~> 2.4'
+  gem 'rspec', '~> 3.13'
+  gem 'rspec-github', '~> 3.0'
   gem 'simplecov', '~> 0.22'
 end

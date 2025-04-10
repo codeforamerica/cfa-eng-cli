@@ -1,8 +1,10 @@
 require:
+  - rubocop-yard
+
+plugins:
   - rubocop-md
   - rubocop-rake
   - rubocop-rspec
-  - rubocop-yard
 
 AllCops:
   NewCops: enable
@@ -19,6 +21,12 @@ Metrics/MethodLength:
     - array
     - method_call
     - hash
+
+# Exclude our main gem include from the file naming convention, to keep it
+# consistent with the gem name.
+Naming/FileName:
+  Exclude:
+    - 'lib/cfa-eng-cli.rb'
 
 # Count multi-line hashes and arrays in examples as one line.
 RSpec/ExampleLength:

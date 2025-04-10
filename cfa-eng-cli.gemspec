@@ -22,6 +22,9 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 3.3'
 
+  s.add_dependency 'aws-sdk-ec2', '~> 1.515'
+  s.add_dependency 'aws-sdk-ssm', '~> 1.192'
   s.add_dependency 'configsl', '~> 1.0'
+  s.add_dependency 'libxml-ruby', '~> 5.0'
   s.add_dependency 'thor', '~> 1.3'
 end

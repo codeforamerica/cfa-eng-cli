@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'thor'
+
+require_relative '../lib/cfa-eng-cli'
+
+# Top-level command class for the cfa-eng CLI.
+class CfaEng < Thor
+  def self.exit_on_failure?
+    true
+  end
+
+  desc 'version', 'Display the current version'
+  def version
+    puts "cfa-eng version #{CfaEngCli::VERSION}"
+  end
+
+  desc 'bastion SUBCOMMAND', 'Commands for interacting with bastion hosts.'
+  subcommand 'bastion', CfaEngCli::Commands::Bastion
+end
+
+CfaEng.start(ARGV)
