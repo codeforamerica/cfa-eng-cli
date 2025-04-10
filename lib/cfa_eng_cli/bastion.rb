@@ -3,6 +3,8 @@
 require 'aws-sdk-ec2'
 require 'aws-sdk-ssm'
 
+require_relative 'session_target'
+
 module CfaEngCli
   # Manage and interact with bastion hosts.
   class Bastion
@@ -35,6 +37,15 @@ module CfaEngCli
       @bastion = instances.reservations.first.instances.first
     end
 
+    # Create a target to connect to with session manager.
+    #
+    # @return [SessionTarget]
+    def target
+      client = Aws::EC2::Client.new
+      SessionTarget.new(lookup.instance_id, client.config.region,
+                        client.config.profile || ENV.fetch('AWS_PROFILE'))
+    end
+
     # Open a tunnel to the bastion for remote port forwarding.
     #
     # @param port [Integer] The remote port to forward.
@@ -43,15 +54,14 @@ module CfaEngCli
     def tunnel(port, host, local_port = 9000)
       puts "Creating tunnel from https://localhost:#{local_port} to https://#{host}:#{port}"
       client = Aws::SSM::Client.new
-      client.start_session({
-                             target: lookup.instance_id,
-                             document_name: 'AWS-StartPortForwardingSessionToRemoteHost',
-                             reason: 'SessionReason',
-                             parameters: {
-                               portNumber: [port.to_s],
-                               localPortNumber: [local_port.to_s],
-                               host: [host]
-                             }
+
+      client.start_session(target: lookup.instance_id,
+                           document_name: 'AWS-StartPortForwardingSessionToRemoteHost',
+                           reason: "Remote port forwarding for #{host}",
+                           parameters: {
+                             portNumber: [port.to_s],
+                             localPortNumber: [local_port.to_s],
+                             host: [host]
                            })
     end
   end

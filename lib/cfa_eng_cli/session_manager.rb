@@ -13,22 +13,19 @@ module CfaEngCli
 
     # Opens a session using the session-manager-plugin.
     #
-    # @param target [String] The connection target identifier.
+    # @param target [SessionTarget] The target of the connection.
     def open(target)
-      region = 'us-east-1'
-      profile = 'il-gcc-nprod'
-
       session = {
         SessionId: @session.session_id,
         StreamUrl: @session.stream_url,
         TokenValue: @session.token_value
       }.to_json
       params = {
-        Target: target
+        Target: target.id
       }.to_json
 
-      exec('session-manager-plugin', session, region, 'StartSession',
-           profile, params, "https://ssm.#{region}.amazonaws.com")
+      exec('session-manager-plugin', session, target.region, 'StartSession',
+           target.profile, params, "https://ssm.#{target.region}.amazonaws.com")
     end
   end
 end

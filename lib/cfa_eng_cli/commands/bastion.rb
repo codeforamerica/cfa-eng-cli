@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'thor'
+
 require_relative '../bastion'
 require_relative '../session_manager'
 
@@ -21,7 +23,7 @@ module CfaEngCli
       def tunnel
         bastion = CfaEngCli::Bastion.new(options[:project], options[:environment])
         session = SessionManager.new(bastion.tunnel(options[:port], options[:host], options[:local_port]))
-        session.open(bastion.lookup.instance_id)
+        session.open(bastion.target)
       end
     end
   end
