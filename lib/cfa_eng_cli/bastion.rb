@@ -54,7 +54,6 @@ module CfaEngCli
     def tunnel(port, host, local_port = 9000)
       puts "Creating tunnel from https://localhost:#{local_port} to https://#{host}:#{port}"
       client = Aws::SSM::Client.new
-
       client.start_session(target: lookup.instance_id,
                            document_name: 'AWS-StartPortForwardingSessionToRemoteHost',
                            reason: "Remote port forwarding for #{host}",

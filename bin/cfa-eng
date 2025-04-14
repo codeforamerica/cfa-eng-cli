@@ -18,6 +18,9 @@ class CfaEng < Thor
 
   desc 'bastion SUBCOMMAND', 'Commands for interacting with bastion hosts.'
   subcommand 'bastion', CfaEngCli::Commands::Bastion
+
+  desc 'profile SUBCOMMAND', 'Commands for managing profiles.'
+  subcommand 'profile', CfaEngCli::Commands::Profile
 end
 
 CfaEng.start(ARGV)
