@@ -1,10 +1,17 @@
+GIT
+  remote: https://github.com/jamesiarmes/configsl.git
+  revision: 2023f113349cb1e70918ccb6b0598ba11a6add02
+  branch: collections
+  specs:
+    configsl (1.0.2)
+      facets (~> 3.1)
+
 PATH
   remote: .
   specs:
     cfa-eng-cli (0.1.0)
       aws-sdk-ec2 (~> 1.515)
       aws-sdk-ssm (~> 1.192)
-      configsl (~> 1.0)
       libxml-ruby (~> 5.0)
       thor (~> 1.3)
 
@@ -30,8 +37,6 @@ GEM
     aws-sigv4 (1.11.0)
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.2.0)
-    configsl (1.0.2)
-      facets (~> 3.1)
     diff-lcs (1.6.1)
     docile (1.4.1)
     facets (3.1.0)
@@ -110,6 +115,7 @@ PLATFORMS
 
 DEPENDENCIES
   cfa-eng-cli!
+  configsl!
   rake (~> 13.2)
   rspec (~> 3.13)
   rspec-github (~> 3.0)
@@ -121,4 +127,4 @@ DEPENDENCIES
   simplecov (~> 0.22)
 
 BUNDLED WITH
-   2.5.15
+   2.6.8

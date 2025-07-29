@@ -2,8 +2,6 @@
 
 require 'thor'
 
-require_relative '../config/profile'
-
 module CfaEngCli
   module Commands
     # Commands for managing profiles.

@@ -4,6 +4,9 @@ source 'https://rubygems.org'
 
 gemspec
 
+# TODO: Move to gemspec once a new release has been cut.
+gem 'configsl', git: 'https://github.com/jamesiarmes/configsl.git', branch: 'collections'
+
 group :development do
   gem 'rake', '~> 13.2'
   gem 'rubocop', '~> 1.75'

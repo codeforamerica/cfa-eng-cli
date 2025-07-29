@@ -27,6 +27,7 @@ Metrics/MethodLength:
 Naming/FileName:
   Exclude:
     - 'lib/cfa-eng-cli.rb'
+    - 'README.md'
 
 # Count multi-line hashes and arrays in examples as one line.
 RSpec/ExampleLength:

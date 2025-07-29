@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
-require 'configsl'
 require 'yaml'
+
+require_relative 'base'
+require_relative 'remote_tunnel'
 
 module CfaEngCli
   module Config
     # Profile definition.
-    class Profile < ConfigSL::Config
+    class Profile < Base
       class InvalidProfile < Thor::Error; end
 
       PROFILE_DIRECTORY = File.join(Dir.home, '.codeforamerica/profiles')
@@ -25,6 +27,7 @@ module CfaEngCli
       option :region, type: String, required: true, default: 'us-east-1',
                       enum: %w[us-east-1 us-east-2 us-west-1 us-west-2],
                       prompt: 'Primary region'
+      option :tunnels, type: Hash, collection: RemoteTunnel, default: {}
 
       class << self
         # Deletes a local profile.
@@ -79,13 +82,6 @@ module CfaEngCli
         profile.write
         delete
         profile
-      end
-
-      # Serializes the current configuration for storage.
-      #
-      # @return [Hash]
-      def serialize
-        values.transform_keys(&:to_s)
       end
 
       # Writes the current configuration to a file.

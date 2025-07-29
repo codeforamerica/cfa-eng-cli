@@ -12,11 +12,9 @@ module CfaEngCli
 
     # Initialize a new Bastion instance.
     #
-    # @param project [String] The name of the project.
-    # @param environment [String] The environment (e.g., staging, production).
-    def initialize(project, environment)
-      @project = project
-      @environment = environment
+    # @param profile [Config::Profile] Profile to use for the bastion.
+    def initialize(profile)
+      @profile = profile
     end
 
     # Lookup a running bastion instance.
@@ -25,11 +23,11 @@ module CfaEngCli
     def lookup
       return @bastion if @bastion
 
-      client = Aws::EC2::Client.new
+      client = Aws::EC2::Client.new(profile: @profile.aws_profile)
       instances = client.describe_instances(filters: [
                                               { name: 'instance-state-name', values: ['running'] },
-                                              { name: 'tag:project', values: [@project] },
-                                              { name: 'tag:environment', values: [@environment] }
+                                              { name: 'tag:project', values: [@profile.project] },
+                                              { name: 'tag:environment', values: [@profile.environment] }
                                             ])
 
       raise NotFoundError, 'No running bastion found' unless instances.reservations.any?
@@ -41,7 +39,7 @@ module CfaEngCli
     #
     # @return [SessionTarget]
     def target
-      client = Aws::EC2::Client.new
+      client = Aws::EC2::Client.new(profile: @profile.aws_profile)
       SessionTarget.new(lookup.instance_id, client.config.region,
                         client.config.profile || ENV.fetch('AWS_PROFILE'))
     end
@@ -53,7 +51,7 @@ module CfaEngCli
     # @param local_port [Integer] The local port to listen on.
     def tunnel(port, host, local_port = 9000)
       puts "Creating tunnel from https://localhost:#{local_port} to https://#{host}:#{port}"
-      client = Aws::SSM::Client.new
+      client = Aws::SSM::Client.new(profile: @profile.aws_profile)
       client.start_session(target: lookup.instance_id,
                            document_name: 'AWS-StartPortForwardingSessionToRemoteHost',
                            reason: "Remote port forwarding for #{host}",

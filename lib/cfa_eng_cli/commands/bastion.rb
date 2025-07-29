@@ -12,17 +12,41 @@ module CfaEngCli
     class Bastion < Thor
       class_option :profile, type: :string, required: true
 
+      desc 'create-tunnel', 'Create a new tunnel configuration'
+      def create_tunnel
+        params = {}
+        Config::RemoteTunnel.options.each do |name, opts|
+          unless options[name]
+            value = ask("#{opts[:prompt]} [#{opts[:default] if opts[:default]}]:")
+            options[name] = value.empty? ? opts[:default] : value
+          end
+
+          params[name] = options[name]
+        end
+
+        profile = Config::Profile.load(options[:profile])
+        profile.tunnels[params[:name]] = Config::RemoteTunnel.new(params)
+        profile.write
+      end
+
+      desc 'delete-tunnel NAME', 'Delete a tunnel configuration'
+      def delete_tunnel(name)
+        profile = Config::Profile.load(options[:profile])
+        profile.tunnels.delete(name.to_sym)
+        profile.write
+      end
+
       desc 'tunnel', 'Open a tunnel to a remote host.'
-      option :host, type: :string, required: true,
-                    desc: 'Remote host to open a tunnel to'
-      option :port, type: :numeric,
-                    desc: 'Remote port to open a tunnel to', default: 443
-      option :local_port, type: :numeric,
-                          desc: 'Local port to listen on', default: 9000
+      option :name, type: :string
       def tunnel
         profile = Config::Profile.load(options[:profile])
-        bastion = CfaEngCli::Bastion.new(profile.project, profile.environment)
-        session = SessionManager.new(bastion.tunnel(options[:port], options[:host], options[:local_port]))
+        tunnel = profile.tunnels[options[:name].to_sym]
+        raise Thor::Error, "No tunnel found for #{options[:name]}" if tunnel.nil?
+
+        bastion = CfaEngCli::Bastion.new(profile)
+        session = SessionManager.new(
+          bastion.tunnel(tunnel.remote_port, tunnel.host, tunnel.local_port)
+        )
         session.open(bastion.target)
       end
     end
