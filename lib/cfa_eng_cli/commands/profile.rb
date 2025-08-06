@@ -14,7 +14,7 @@ module CfaEngCli
       option :region, type: :string, desc: 'Primary region for the project'
       def create
         Config::Profile.options.each do |name, opts|
-          next if options[name]
+          next if options[name] || [Array, Hash].include?(opts[:type])
 
           value = ask("#{opts[:prompt]} [#{opts[:default] if opts[:default]}]:")
           options[name] = value.empty? ? opts[:default] : value

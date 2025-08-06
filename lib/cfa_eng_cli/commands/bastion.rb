@@ -10,11 +10,12 @@ module CfaEngCli
   module Commands
     # Commands for interacting with bastion hosts.
     class Bastion < Thor
-      class_option :profile, type: :string, required: true
+      class_option :profile, type: :string, required: true, default: ENV.fetch('CFA_PROFILE', nil)
 
       desc 'create-tunnel', 'Create a new tunnel configuration'
       def create_tunnel
         params = {}
+        profile = Config::Profile.load(options[:profile])
         Config::RemoteTunnel.options.each do |name, opts|
           unless options[name]
             value = ask("#{opts[:prompt]} [#{opts[:default] if opts[:default]}]:")
@@ -24,7 +25,6 @@ module CfaEngCli
           params[name] = options[name]
         end
 
-        profile = Config::Profile.load(options[:profile])
         profile.tunnels[params[:name]] = Config::RemoteTunnel.new(params)
         profile.write
       end
