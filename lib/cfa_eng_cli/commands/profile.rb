@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'thor'
+require_relative 'command'
 
 module CfaEngCli
   module Commands
     # Commands for managing profiles.
-    class Profile < Thor
+    class Profile < Command
       desc 'create', 'Create a new profile.'
       option :name, type: :string, desc: 'Name of the profile'
       option :project, type: :string, desc: 'Project to associate with the profile'
@@ -16,8 +16,7 @@ module CfaEngCli
         Config::Profile.options.each do |name, opts|
           next if options[name] || [Array, Hash].include?(opts[:type])
 
-          value = ask("#{opts[:prompt]} [#{opts[:default] if opts[:default]}]:")
-          options[name] = value.empty? ? opts[:default] : value
+          options[name] = prompt_for_parameter(opts)
         end
 
         Config::Profile.new(options).write

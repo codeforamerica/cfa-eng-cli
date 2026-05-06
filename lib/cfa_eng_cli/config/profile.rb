@@ -11,6 +11,7 @@ module CfaEngCli
     class Profile < Base
       class InvalidProfile < Thor::Error; end
 
+      IGNORED_PATHS = ['.', '..'].freeze
       PROFILE_DIRECTORY = File.join(Dir.home, '.codeforamerica/profiles')
 
       register_file_format :yaml
@@ -46,7 +47,7 @@ module CfaEngCli
         def list
           profiles = []
           Dir.entries(PROFILE_DIRECTORY).each do |file|
-            next if ['.', '..'].include?(file)
+            next if IGNORED_PATHS.include?(file)
 
             profiles << file[0..-6]
           end
