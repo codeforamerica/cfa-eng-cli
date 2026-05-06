@@ -15,7 +15,8 @@ RSpec.describe CfaEngCli::Config::Profile do
       project: 'test-project',
       environment: 'test-environment',
       aws_profile: 'test-aws-profile',
-      region: 'us-east-1'
+      region: 'us-east-1',
+      tunnels: {}
     }
   end
 
