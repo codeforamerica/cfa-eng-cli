@@ -2,15 +2,20 @@
 
 require_relative '../../../lib/cfa_eng_cli/bastion'
 
-# rubocop:disable RSpec/SubjectStub
 RSpec.describe CfaEngCli::Bastion do
-  subject(:bastion) { described_class.new(project, environment) }
+  subject(:bastion) { described_class.new(profile) }
 
   let(:config) { Struct.new(:region, :profile) }
-  let(:project) { 'test-project' }
-  let(:environment) { 'test-environment' }
   let(:ec2_client) { instance_double(Aws::EC2::Client, config: config.new('us-east-1')) }
-  let(:bastion_instance) { instance_double(Aws::EC2::Types::Instance, instance_id: 'i-1234567890abcdef0') }
+  let(:instance) { instance_double(Aws::EC2::Types::Instance, instance_id: 'i-1234567890abcdef0') }
+
+  let(:profile) do
+    instance_double(CfaEngCli::Config::Profile, name: 'test-profile',
+                                                project: 'test-project',
+                                                environment: 'test-environment',
+                                                aws_profile: 'test-aws-profile',
+                                                region: 'us-east-1')
+  end
 
   before do
     allow(Aws::EC2::Client).to receive(:new).and_return(ec2_client)
@@ -29,19 +34,19 @@ RSpec.describe CfaEngCli::Bastion do
       let(:reservations) do
         [
           instance_double(Aws::EC2::Types::Reservation, instances: [
-                            bastion_instance,
+                            instance,
                             instance_double(Aws::EC2::Types::Instance, instance_id: 'i-09876547321abcdef0')
                           ])
         ]
       end
 
       it 'returns the first running bastion instance when found' do
-        expect(bastion.lookup.instance_id).to eq(bastion_instance.instance_id)
+        expect(bastion.lookup.instance_id).to eq(instance.instance_id)
       end
     end
 
     context 'when no running instances are found' do
-      it 'raises an exceptiuon' do
+      it 'raises an exception' do
         expect { bastion.lookup }.to raise_error(CfaEngCli::Bastion::NotFoundError, 'No running bastion found')
       end
     end
@@ -51,8 +56,11 @@ RSpec.describe CfaEngCli::Bastion do
     subject(:target) { bastion.target }
 
     before do
-      ENV['AWS_PROFILE'] = 'rspec-environment'
-      allow(bastion).to receive(:lookup).and_return(bastion_instance)
+      stub_const('ENV', 'AWS_PROFILE' => 'rspec-environment')
+      allow(ec2_client).to receive(:describe_instances).and_return(
+        instance_double(Aws::EC2::Types::DescribeInstancesResult,
+                        reservations: [instance_double(Aws::EC2::Types::Reservation, instances: [instance])])
+      )
     end
 
     context 'when a profile is set on the client' do
@@ -69,7 +77,7 @@ RSpec.describe CfaEngCli::Bastion do
       end
 
       it 'sets the correct id' do
-        expect(target.id).to eq(bastion_instance.instance_id)
+        expect(target.id).to eq(instance.instance_id)
       end
     end
 
@@ -86,7 +94,12 @@ RSpec.describe CfaEngCli::Bastion do
     before do
       allow(Aws::SSM::Client).to receive(:new).and_return(ssm_client)
       allow(ssm_client).to receive(:start_session)
-      allow(bastion).to receive(:lookup).and_return(bastion_instance)
+
+      allow(Aws::EC2::Client).to receive(:new).and_return(ec2_client)
+      allow(ec2_client).to receive(:describe_instances).and_return(
+        instance_double(Aws::EC2::Types::DescribeInstancesResult,
+                        reservations: [instance_double(Aws::EC2::Types::Reservation, instances: [instance])])
+      )
     end
 
     it 'starts a port forwarding session with valid parameters' do
@@ -120,4 +133,3 @@ RSpec.describe CfaEngCli::Bastion do
     end
   end
 end
-# rubocop:enable RSpec/SubjectStub

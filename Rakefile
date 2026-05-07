@@ -10,7 +10,6 @@ Bundler::GemHelper.install_tasks
 
 RuboCop::RakeTask.new(:rubocop) do |task|
   task.requires << 'rubocop'
-  task.formatters = %w[pacman]
   task.formatters << 'github' if ENV.fetch('GITHUB_ACTIONS', false)
 end
 

@@ -1,10 +1,9 @@
-require:
-  - rubocop-yard
-
 plugins:
   - rubocop-md
+  - rubocop-performance
   - rubocop-rake
   - rubocop-rspec
+  - rubocop-yard
 
 AllCops:
   NewCops: enable

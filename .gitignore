@@ -4,6 +4,7 @@
 !sample.env
 coverage/
 out/
+settings.local.json
 
 # Ignore Byebug command history file.
 .byebug_history
