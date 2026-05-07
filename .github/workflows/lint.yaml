@@ -20,4 +20,4 @@ jobs:
         with:
           bundler-cache: true
       - name: Run RuboCop
-        run: rake rubocop
+        run: bundle exec rake rubocop
