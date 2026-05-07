@@ -16,7 +16,7 @@ module CfaEngCli
         profile = Config::Profile.load(options[:profile])
         params = collect_tunnel_params
 
-        profile.tunnels[params[:name]] = Config::RemoteTunnel.new(params)
+        profile.tunnels[params[:name].to_sym] = Config::RemoteTunnel.new(params)
         profile.write
       end
 

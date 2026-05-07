@@ -11,7 +11,7 @@ module CfaEngCli
       # Prompts the user for a parameter value.
       #
       # @param opts [Hash] Options for the parameter to prompt for.
-      # @return [String] Provided or default value of the parameter.
+      # @return [Object] Provided or default value of the parameter.
       def prompt_for_parameter(opts)
         value = ask("#{opts[:prompt]} [#{opts[:default] if opts[:default]}]:")
         value.empty? ? opts[:default] : value

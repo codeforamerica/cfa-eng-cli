@@ -46,7 +46,7 @@ RSpec.describe CfaEngCli::Bastion do
     end
 
     context 'when no running instances are found' do
-      it 'raises an exceptiuon' do
+      it 'raises an exception' do
         expect { bastion.lookup }.to raise_error(CfaEngCli::Bastion::NotFoundError, 'No running bastion found')
       end
     end
@@ -56,7 +56,7 @@ RSpec.describe CfaEngCli::Bastion do
     subject(:target) { bastion.target }
 
     before do
-      ENV['AWS_PROFILE'] = 'rspec-environment'
+      stub_const('ENV', 'AWS_PROFILE' => 'rspec-environment')
       allow(ec2_client).to receive(:describe_instances).and_return(
         instance_double(Aws::EC2::Types::DescribeInstancesResult,
                         reservations: [instance_double(Aws::EC2::Types::Reservation, instances: [instance])])
