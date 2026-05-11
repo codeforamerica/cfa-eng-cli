@@ -10,10 +10,10 @@ PATH
   remote: .
   specs:
     cfa-eng-cli (0.1.0)
-      aws-sdk-ec2 (~> 1.515)
-      aws-sdk-ssm (~> 1.192)
+      aws-sdk-ec2 (~> 1.614)
+      aws-sdk-ssm (~> 1.212)
       libxml-ruby (~> 5.0)
-      thor (~> 1.3)
+      thor (~> 1.5)
 
 GEM
   remote: https://rubygems.org/

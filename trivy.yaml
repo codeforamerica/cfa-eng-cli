@@ -1,0 +1,10 @@
+exit-code: 1
+scan:
+  scanners:
+    - license
+    - misconfig
+    - secret
+    - vuln
+  skip-dirs:
+    - .ruby-lsp
+    - vendor/bundle
