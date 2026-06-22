@@ -26,6 +26,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'aws-sdk-ssm', '~> 1.212'
   # s.add_dependency 'configsl', '~> 1.0'
   # aws-sdk-core doesn't support libxml-ruby 6.0 yet.
-  s.add_dependency 'libxml-ruby', '~> 5.0'
+  s.add_dependency 'libxml-ruby', '>= 5', '< 7'
   s.add_dependency 'thor', '~> 1.5'
 end
