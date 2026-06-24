@@ -16,6 +16,7 @@ RSpec.describe CfaEngCli::Config::Profile do
       environment: 'test-environment',
       aws_profile: 'test-aws-profile',
       region: 'us-east-1',
+      doppler: { project: 'shared-services', environment: 'infra' },
       tunnels: {}
     }
   end
@@ -85,10 +86,20 @@ RSpec.describe CfaEngCli::Config::Profile do
     end
 
     context 'when the file exists' do
-      it 'loads the profile from file' do
-        profile = described_class.load(name)
+      it 'loads the correct name' do
+        expect(described_class.load(name).name).to eq(params[:name])
+      end
 
-        expect(profile.values).to eq(params)
+      it 'loads the correct project' do
+        expect(described_class.load(name).project).to eq(params[:project])
+      end
+
+      it 'loads the correct doppler project' do
+        expect(described_class.load(name).doppler.project).to eq(params.dig(:doppler, :project))
+      end
+
+      it 'loads the correct doppler environment' do
+        expect(described_class.load(name).doppler.environment).to eq(params.dig(:doppler, :environment))
       end
     end
 
@@ -173,13 +184,48 @@ RSpec.describe CfaEngCli::Config::Profile do
     end
   end
 
+  describe '#doppler' do
+    describe '#project' do
+      it 'defaults to shared-services' do
+        profile_without_project = described_class.new(params.merge(doppler: { environment: 'infra' }))
+
+        expect(profile_without_project.doppler.project).to eq('shared-services')
+      end
+
+      it 'accepts a custom value' do
+        expect(profile.doppler.project).to eq('shared-services')
+      end
+    end
+
+    describe '#environment' do
+      it 'defaults to infra' do
+        profile_without_env = described_class.new(params.merge(doppler: { project: 'shared-services' }))
+
+        expect(profile_without_env.doppler.environment).to eq('infra')
+      end
+
+      it 'accepts a custom value' do
+        custom = described_class.new(params.merge(doppler: { project: 'shared-services', environment: 'platform' }))
+
+        expect(custom.doppler.environment).to eq('platform')
+      end
+    end
+  end
+
   describe '#serialize' do
     it 'returns a hash with string keys' do
       expect(profile.serialize.keys).to eq(params.keys.map(&:to_s))
     end
 
-    it 'returns a hash with the correct values' do
-      expect(profile.serialize.values).to eq(params.values)
+    it 'returns scalar fields with the correct values' do
+      scalar_keys = %w[name project environment aws_profile region]
+      expected = params.slice(*scalar_keys.map(&:to_sym)).transform_keys(&:to_s)
+
+      expect(profile.serialize.slice(*scalar_keys)).to eq(expected)
+    end
+
+    it 'returns a Doppler object for the doppler key' do
+      expect(profile.serialize['doppler']).to be_a(CfaEngCli::Config::Doppler)
     end
   end
 end

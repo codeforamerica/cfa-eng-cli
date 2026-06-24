@@ -9,6 +9,7 @@ AllCops:
   NewCops: enable
   SuggestExtensions: true
   Exclude:
+    - 'bin/**/*'
     - 'out/**/*'
     - 'vendor/**/*'
     - 'doc/**/*'
@@ -26,7 +27,9 @@ Metrics/MethodLength:
 Naming/FileName:
   Exclude:
     - 'lib/cfa-eng-cli.rb'
+    - 'lib/cfa_eng_cli/config/Doppler.rb'
     - 'README.md'
+    - 'CLAUDE.md'
 
 # Count multi-line hashes and arrays in examples as one line.
 RSpec/ExampleLength:

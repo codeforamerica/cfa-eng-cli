@@ -9,8 +9,9 @@ settings.local.json
 # Ignore Byebug command history file.
 .byebug_history
 
-## Environment normalization:
+# Environment normalization:
 /.bundle/
+/bin/
 /vendor/bundle
 /lib/bundler/man/
 

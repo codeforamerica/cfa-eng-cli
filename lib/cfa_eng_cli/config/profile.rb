@@ -3,6 +3,7 @@
 require 'yaml'
 
 require_relative 'base'
+require_relative 'doppler'
 require_relative 'remote_tunnel'
 
 module CfaEngCli
@@ -28,6 +29,7 @@ module CfaEngCli
       option :region, type: String, required: true, default: 'us-east-1',
                       enum: %w[us-east-1 us-east-2 us-west-1 us-west-2],
                       prompt: 'Primary region'
+      option :doppler, type: Doppler
       option :tunnels, type: Hash, collection: RemoteTunnel, default: {}
 
       class << self

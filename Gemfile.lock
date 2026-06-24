@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/jamesiarmes/configsl.git
-  revision: 2023f113349cb1e70918ccb6b0598ba11a6add02
-  branch: collections
+  revision: 297b420f32e47752638d2d43823f5c6a71866f39
+  branch: main
   specs:
     configsl (1.0.2)
       facets (~> 3.1)

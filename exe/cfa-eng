@@ -22,6 +22,9 @@ class CfaEng < Thor
 
   desc 'profile SUBCOMMAND', 'Commands for managing profiles.'
   subcommand 'profile', CfaEngCli::Commands::Profile
+
+  desc 'tofu SUBCOMMAND', 'Commands for running OpenTofu operations.'
+  subcommand 'tofu', CfaEngCli::Commands::Tofu
 end
 
 CfaEng.start(ARGV)

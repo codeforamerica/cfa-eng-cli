@@ -2,6 +2,7 @@
 
 require_relative 'cfa_eng_cli/bastion'
 require_relative 'cfa_eng_cli/commands'
+require_relative 'cfa_eng_cli/open_tofu'
 require_relative 'cfa_eng_cli/config'
 require_relative 'cfa_eng_cli/version'
 

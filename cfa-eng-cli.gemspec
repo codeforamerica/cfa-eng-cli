@@ -11,6 +11,8 @@ Gem::Specification.new do |s|
   s.authors     = ['Code for America']
   s.email       = 'infra@codeforamerica.org'
   s.files       = Dir['lib/**/*'] + Dir['Gemfile*'] + ['Rakefile']
+  s.bindir      = 'exe'
+  s.executables << 'cfa-eng'
   s.homepage    = 'https://codeforamerica.org'
   s.metadata    = {
     'bug_tracker_uri' => 'https://github.com/codeforamerica/cfa-eng-url/issues',
