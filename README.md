@@ -208,8 +208,8 @@ cfa-eng tofu output foundation --profile my-app --args="-json"
 
 #### `tofu force-unlock CONFIG LOCK_ID`
 
-Force-unlocks a stuck state lock for the given configuration layer. Prompts for
-confirmation before proceeding. Does not fetch Doppler secrets.
+Force-unlocks a stuck state lock for the given configuration layer. `tofu`
+prompts for confirmation before releasing the lock.
 
 ```bash
 cfa-eng tofu force-unlock foundation abc-1234-5678 --profile my-app

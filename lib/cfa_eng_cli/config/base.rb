@@ -19,7 +19,8 @@ module CfaEngCli
 
       # Serialize the value for a single option.
       def serialize_option(option, value)
-        return [option.to_s, value] unless collection?(option)
+        return [option.to_s, value.serialize] if value.is_a?(ConfigSL::Config)
+        return [option.to_s, value] unless configsl_collection?(option)
 
         serialized = if options[option][:type] == Hash
                        value.to_h { |k, v| [k.to_s, v.serialize] }

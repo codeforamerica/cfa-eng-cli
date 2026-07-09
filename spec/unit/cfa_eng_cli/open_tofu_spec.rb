@@ -20,8 +20,7 @@ RSpec.describe CfaEngCli::OpenTofu do
 
   before do
     stub_const('ENV', {})
-    allow(tofu).to receive(:system)
-    allow(tofu).to receive(:fetch_doppler_json).and_return(doppler_secrets.to_json)
+    allow(tofu).to receive_messages(system: true, fetch_doppler_json: doppler_secrets.to_json)
     allow(Dir).to receive(:chdir).and_yield
   end
 
@@ -45,6 +44,61 @@ RSpec.describe CfaEngCli::OpenTofu do
 
       it 'sets AWS_PROFILE to the given profile' do
         expect(ENV.fetch('AWS_PROFILE', nil)).to eq('custom-profile')
+      end
+    end
+  end
+
+  describe '#init' do
+    it 'changes to the config directory' do
+      tofu.init('foundation')
+
+      expect(Dir).to have_received(:chdir).with('tofu/configs/foundation')
+    end
+
+    it 'runs tofu init' do
+      tofu.init('foundation')
+
+      expect(tofu).to have_received(:system).with('tofu', 'init', '-reconfigure')
+    end
+
+    it 'fetches Doppler variables' do
+      tofu.init('foundation')
+
+      expect(tofu).to have_received(:fetch_doppler_json)
+    end
+
+    it 'does not run a tofu subcommand' do
+      tofu.init('foundation')
+
+      expect(tofu).to have_received(:system).exactly(:once)
+    end
+
+    context 'with extra args' do
+      it 'appends extra args to tofu init' do
+        tofu.init('foundation', args: ['-upgrade', '-migrate-state'])
+
+        expect(tofu).to have_received(:system)
+          .with('tofu', 'init', '-reconfigure', '-upgrade', '-migrate-state')
+      end
+    end
+
+    context 'with vars' do
+      let(:vars) { ['-var', 'application=foo'] }
+
+      it 'passes vars to tofu init' do
+        tofu.init('foundation', vars: vars)
+
+        expect(tofu).to have_received(:system)
+          .with('tofu', 'init', '-reconfigure', '-var', 'application=foo')
+      end
+    end
+
+    context 'with both extra args and vars' do
+      it 'passes both to tofu init' do
+        tofu.init('foundation', args: ['-upgrade'], vars: ['-var', 'application=foo'])
+
+        expect(tofu).to have_received(:system)
+          .with('tofu', 'init', '-reconfigure', '-upgrade', '-var', 'application=foo')
       end
     end
   end
@@ -189,10 +243,10 @@ RSpec.describe CfaEngCli::OpenTofu do
       expect(tofu).to have_received(:system).with('tofu', 'force-unlock', 'abc-123')
     end
 
-    it 'does not fetch Doppler variables' do
+    it 'fetches Doppler variables' do
       tofu.force_unlock('foundation', 'abc-123')
 
-      expect(tofu).not_to have_received(:fetch_doppler_json)
+      expect(tofu).to have_received(:fetch_doppler_json)
     end
   end
 
@@ -201,6 +255,12 @@ RSpec.describe CfaEngCli::OpenTofu do
       allow(tofu).to receive(:bucket_exists?)
       allow(FileUtils).to receive(:cp)
       allow(FileUtils).to receive(:rm)
+    end
+
+    it 'fetches Doppler variables' do
+      tofu.bootstrap
+
+      expect(tofu).to have_received(:fetch_doppler_json)
     end
 
     it 'sets TF_VAR_environment' do
@@ -233,7 +293,7 @@ RSpec.describe CfaEngCli::OpenTofu do
       it 'initializes with the remote backend' do
         tofu.bootstrap
 
-        expect(tofu).to have_received(:system).with('tofu', 'init', '-input=false', '-reconfigure')
+        expect(tofu).to have_received(:system).with('tofu', 'init', '-input=false', '-migrate-state', '-force-copy')
       end
 
       it 'does not copy the backend override file' do
@@ -286,7 +346,7 @@ RSpec.describe CfaEngCli::OpenTofu do
         tofu.bootstrap(vars:)
 
         expect(tofu).to have_received(:system)
-          .with('tofu', 'init', '-input=false', '-reconfigure', '-var', 'application=foo')
+          .with('tofu', 'init', '-input=false', '-migrate-state', '-force-copy', '-var', 'application=foo')
       end
     end
 

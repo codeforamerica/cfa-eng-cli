@@ -27,7 +27,6 @@ Metrics/MethodLength:
 Naming/FileName:
   Exclude:
     - 'lib/cfa-eng-cli.rb'
-    - 'lib/cfa_eng_cli/config/Doppler.rb'
     - 'README.md'
     - 'CLAUDE.md'
 

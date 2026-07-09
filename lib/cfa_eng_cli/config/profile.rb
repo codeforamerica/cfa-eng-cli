@@ -23,13 +23,13 @@ module CfaEngCli
                        prompt: 'Project name'
       option :environment, type: String, required: true,
                            prompt: 'Environment'
-      option :aws_profile, type: String, reguired: true,
+      option :aws_profile, type: String, required: true,
                            default: ENV.fetch('AWS_PROFILE', nil),
                            prompt: 'AWS profile'
       option :region, type: String, required: true, default: 'us-east-1',
                       enum: %w[us-east-1 us-east-2 us-west-1 us-west-2],
                       prompt: 'Primary region'
-      option :doppler, type: Doppler
+      option :doppler, type: Doppler, required: true, default: Doppler.new
       option :tunnels, type: Hash, collection: RemoteTunnel, default: {}
 
       class << self

@@ -224,8 +224,11 @@ RSpec.describe CfaEngCli::Config::Profile do
       expect(profile.serialize.slice(*scalar_keys)).to eq(expected)
     end
 
-    it 'returns a Doppler object for the doppler key' do
-      expect(profile.serialize['doppler']).to be_a(CfaEngCli::Config::Doppler)
+    it 'returns a serialized hash for the doppler key' do
+      expect(profile.serialize['doppler']).to eq(
+        'project' => 'shared-services',
+        'environment' => 'infra'
+      )
     end
   end
 end

@@ -16,6 +16,13 @@ module CfaEngCli
                                'Passed to both tofu init and the subcommand. ' \
                                'Can be specified multiple times.'
 
+      desc 'init CONFIG', 'Run tofu init for the given configuration layer'
+      option :args, type: :string, desc: 'Extra arguments to pass to tofu init (e.g. "-upgrade")'
+      def init(config)
+        profile = load_profile
+        open_tofu(profile).init(config, args: extra_args, vars: var_args)
+      end
+
       desc 'plan CONFIG', 'Run tofu plan for the given configuration layer'
       option :args, type: :string, desc: 'Extra arguments to pass to tofu plan (e.g. "-out tfplan")'
       def plan(config)
@@ -77,6 +84,7 @@ module CfaEngCli
       def open_tofu(profile)
         OpenTofu.new(profile.environment,
                      aws_profile: profile.aws_profile,
+                     region: profile.region,
                      doppler_project: profile.doppler.project,
                      doppler_environment: profile.doppler.environment)
       end
