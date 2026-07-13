@@ -9,12 +9,12 @@ gem 'configsl', git: 'https://github.com/jamesiarmes/configsl.git', branch: 'col
 
 group :development do
   gem 'rake', '~> 13.4'
-  gem 'rubocop', '~> 1.86'
+  gem 'rubocop', '~> 1.88'
   gem 'rubocop-md', '~> 2.0'
   gem 'rubocop-performance', '~> 1.26'
   gem 'rubocop-rake', '~> 0.7'
-  gem 'rubocop-rspec', '~> 3.9'
-  gem 'rubocop-yard', '~> 1.1'
+  gem 'rubocop-rspec', '~> 3.10'
+  gem 'rubocop-yard', '~> 1.3'
   gem 'ruby-lsp', '~> 0.26'
   gem 'ruby-lsp-rspec', '~> 0.1'
 end
@@ -22,5 +22,5 @@ end
 group :test do
   gem 'rspec', '~> 3.13'
   gem 'rspec-github', '~> 3.0'
-  gem 'simplecov', '~> 0.22'
+  gem 'simplecov', '~> 1.0'
 end
